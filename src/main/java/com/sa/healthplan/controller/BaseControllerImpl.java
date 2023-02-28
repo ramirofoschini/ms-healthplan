@@ -1,12 +1,12 @@
 package com.sa.healthplan.controller;
 
 import com.sa.healthplan.model.Base;
-import com.sa.healthplan.model.HealthPlan;
 
 import com.sa.healthplan.service.BaseServiceImpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-public abstract class BaseControllerImpl<E extends HealthPlan, S extends BaseServiceImpl<E, Long>> implements BaseController<E, Long> {
+public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceImpl<E, Long>> implements BaseController<E, Long> {
 
     @Autowired
     protected S service;
 
-    @GetMapping("/healthPlans")
+    private static final String ERROR_404 = "{\"error\":\"404\"}";
+
+    @GetMapping("")
     @Override
     public ResponseEntity<?> getAll() {
         try {
@@ -47,12 +49,12 @@ public abstract class BaseControllerImpl<E extends HealthPlan, S extends BaseSer
             return new ResponseEntity<>(model, HttpStatus.OK);
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"404\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ERROR_404);
         }
 
     }
 
-    @GetMapping("/healthPlan/{id}")
+    @GetMapping("{id}")
     @Override
     public ResponseEntity<?> getOne(@PathVariable Long id) {
         try {
@@ -66,11 +68,11 @@ public abstract class BaseControllerImpl<E extends HealthPlan, S extends BaseSer
             return new ResponseEntity<>(hp, HttpStatus.OK);
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"404\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ERROR_404);
         }
     }
 
-    @PostMapping("/healthPlan")
+    @PostMapping("")
     @Override
     public ResponseEntity<?> save(@RequestBody E entity) {
         try {
@@ -86,12 +88,12 @@ public abstract class BaseControllerImpl<E extends HealthPlan, S extends BaseSer
                     .body(saved);
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"404\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_404);
         }
 
     }
 
-    @PutMapping("/healthPlan/{id}")
+    @PutMapping("{id}")
 
     @Override
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody E entity) {
@@ -110,11 +112,11 @@ public abstract class BaseControllerImpl<E extends HealthPlan, S extends BaseSer
             return new ResponseEntity<>(entity, HttpStatus.OK);
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"404\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_404);
         }
     }
 
-    @DeleteMapping("/healthPlan/{id}")
+    @DeleteMapping("{id}")
 
     @Override
     public ResponseEntity<?> delete(@PathVariable Long id) {
@@ -122,20 +124,17 @@ public abstract class BaseControllerImpl<E extends HealthPlan, S extends BaseSer
             return ResponseEntity.status(HttpStatus.OK).body(service.delete(id));
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"404\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR_404);
         }
     }
 
-    @PatchMapping("/healthPlan/{id}")
-    @Override
-    public ResponseEntity<?> updateNamePlan(@PathVariable Long id, @RequestBody E entity) {
+    @GetMapping("/paged")
+    public ResponseEntity<?> getAll(Pageable pageable) {
         try {
-            
-            service.updateNamePlan(id, entity.getNameplan());
-            return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
 
+            return ResponseEntity.status(HttpStatus.OK).body(service.findAll(pageable));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"404\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"404\"}");
         }
     }
 

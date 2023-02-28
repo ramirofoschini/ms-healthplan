@@ -1,15 +1,16 @@
 package com.sa.healthplan.service;
 
 import com.sa.healthplan.model.Base;
-import com.sa.healthplan.model.HealthPlan;
 
 import com.sa.healthplan.repository.BaseRepository;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-public abstract class BaseServiceImpl<E extends HealthPlan, ID extends Serializable> implements BaseService<E, ID> {
+public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> implements BaseService<E, ID> {
 
     @Autowired
     protected BaseRepository<E, ID> baseRepository;
@@ -81,16 +82,13 @@ public abstract class BaseServiceImpl<E extends HealthPlan, ID extends Serializa
     }
 
     @Override
-    public E updateNamePlan(ID id, String nameplan) throws Exception {
+    public Page<E> findAll(Pageable pageable) throws Exception {
         try {
-
-            baseRepository.updateNamePlan(id, nameplan);
-            E e = baseRepository.findById(id).get();
-
-            return e;
-            
+            Page<E> entities = baseRepository.findAll(pageable);
+            return entities;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
+
 }

@@ -17,7 +17,7 @@ import lombok.Setter;
 public class HealthPlan extends Base {
 
   
-    private String nameplan;
+    //private String nameplan;
     private String documentPath;
     private String clinics;
     private String comments;

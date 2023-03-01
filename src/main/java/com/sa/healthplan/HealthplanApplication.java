@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition(
         info = @Info(
                 title = "Microservice HealthPlan",
-                version = "1.0",
+                version = "1.1",
                 description = "Microservicio con artquitectura RestFull desarrollado con Springboot",
                 license = @License(name = "Apache 2.0", url = "http://foo.bar"),
                 contact = @Contact(url = "", name = "Ramiro Foschini", email = "foschiniramiro@gmail.com")

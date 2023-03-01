@@ -3,6 +3,8 @@ package com.sa.healthplan.controller;
 import com.sa.healthplan.model.HealthPlan;
 
 import com.sa.healthplan.service.HealthPlanServiceImpl;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -18,11 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("api/v1/healthPlans")
+
 public class HealthPlanController extends BaseControllerImpl<HealthPlan, HealthPlanServiceImpl> {
 
     @Autowired
     private HealthPlanServiceImpl healthPlanServiceImpl;
 
+    @Operation(summary = "Devuelve las entidades paginadas y filtradas")
     @GetMapping("/searchPaged")
     public ResponseEntity<?> search(@RequestParam String filter, Pageable pageable) {
 

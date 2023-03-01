@@ -3,6 +3,8 @@ package com.sa.healthplan.controller;
 import com.sa.healthplan.model.Base;
 
 import com.sa.healthplan.service.BaseServiceImpl;
+
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,7 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
     @Autowired
     protected S service;
 
-    //private static final String ERROR_404 = "{\"error\":\"404\"}";
-
+    @Operation(summary = "Devuelve todas las entidades")
     @GetMapping("")
     @Override
     public ResponseEntity<?> getAll() {
@@ -54,6 +55,7 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
 
     }
 
+    @Operation(summary = "Devuelve entidades por ID")
     @GetMapping("{id}")
     @Override
     public ResponseEntity<?> getOne(@PathVariable Long id) {
@@ -72,6 +74,7 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
         }
     }
 
+    @Operation(summary = "Crea nuevas entidades")
     @PostMapping("")
     @Override
     public ResponseEntity<?> save(@RequestBody E entity) {
@@ -93,6 +96,7 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
 
     }
 
+    @Operation(summary = "Modifica una entidad por ID")
     @PutMapping("{id}")
 
     @Override
@@ -116,6 +120,7 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
         }
     }
 
+    @Operation(summary = "Elimina una entidad por ID")
     @DeleteMapping("{id}")
 
     @Override
@@ -128,7 +133,9 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
         }
     }
 
+    @Operation(summary = "Devuelve las entidades paginadas")
     @GetMapping("/paged")
+    @Override
     public ResponseEntity<?> getAll(Pageable pageable) {
         try {
 

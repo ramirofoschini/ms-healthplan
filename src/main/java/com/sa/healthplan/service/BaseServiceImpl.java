@@ -52,10 +52,11 @@ public abstract class BaseServiceImpl<E extends Base, ID extends Serializable> i
     @Override
     public E update(ID id, E entity) throws Exception {
         try {
-            Optional<E> op = baseRepository.findById(id);
-            E healthPlan = op.get();
+
+            E healthPlan = baseRepository.findById(id).get();
 
             healthPlan = baseRepository.save(entity);
+
             return healthPlan;
 
         } catch (Exception e) {

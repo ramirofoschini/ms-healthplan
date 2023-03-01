@@ -8,5 +8,4 @@ public interface HealthPlanService extends BaseService<HealthPlan, Long> {
 
     Page<HealthPlan> search(String filter, Pageable pageable) throws Exception;
 
-    //public HealthPlan updateNamePlan (Long id, String nameplan)throws Exception;
 }

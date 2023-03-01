@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HealthPlanRepositpory extends BaseRepository<HealthPlan, Long> {
 
-//Paginas
+    //Paginacion
     Page<HealthPlan> findByClinicsContainingOrCommentsContaining(@Param("clinics") String clinics, @Param("comments") String comments, Pageable pageable);
 
     @Query(value = "SELECT a FROM HealthPlan a WHERE a.clinics LIKE %:filter% OR a.comments LIKE %:filter%")
@@ -25,12 +25,4 @@ public interface HealthPlanRepositpory extends BaseRepository<HealthPlan, Long> 
     )
     Page<HealthPlan> searchNative(@Param("filter") String filter, Pageable pageable);
 
-
-    /* @Modifying
-    @Transactional
-    @Query(value = "UPDATE HealthPlan SET nameplan = :nameplan WHERE id = :id")
-
-    void updateNamePlan(@Param ("id") Long id, @Param ("nameplan") String nameplan);
-    
-     */
 }

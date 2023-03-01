@@ -20,5 +20,6 @@ public interface BaseService<E extends Base, ID extends Serializable> {
     public E update(ID id, E entity) throws Exception;
 
     public boolean delete(ID id) throws Exception;
+    
 
 }

@@ -24,7 +24,7 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
     @Autowired
     protected S service;
 
-    private static final String ERROR_404 = "{\"error\":\"404\"}";
+    //private static final String ERROR_404 = "{\"error\":\"404\"}";
 
     @GetMapping("")
     @Override

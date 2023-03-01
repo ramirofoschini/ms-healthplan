@@ -134,7 +134,7 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
 
             return ResponseEntity.status(HttpStatus.OK).body(service.findAll(pageable));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"404\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ERROR_404);
         }
     }
 

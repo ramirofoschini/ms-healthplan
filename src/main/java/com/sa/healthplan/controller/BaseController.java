@@ -11,18 +11,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface BaseController<E extends Base, ID extends Serializable> {
 
-    static final String ERROR_404 = "{\"error\":\"404\"}";
+    ResponseEntity<?> getAll();
 
-    public ResponseEntity<?> getAll();
+    ResponseEntity<?> getAll(Pageable pageable);
 
-    public ResponseEntity<?> getAll(Pageable pageable);
+    ResponseEntity<?> getOne(@PathVariable ID id);
 
-    public ResponseEntity<?> getOne(@PathVariable ID id);
+    ResponseEntity<?> save(@RequestBody E entity);
 
-    public ResponseEntity<?> save(@RequestBody E entity);
+    ResponseEntity<?> update(@PathVariable ID id, @RequestBody E entity);
 
-    public ResponseEntity<?> update(@PathVariable ID id, @RequestBody E entity);
-
-    public ResponseEntity<?> delete(@PathVariable ID id);
+    ResponseEntity<?> delete(@PathVariable ID id);
 
 }

@@ -9,17 +9,16 @@ import org.springframework.data.domain.Pageable;
 
 public interface BaseService<E extends Base, ID extends Serializable> {
 
-    public List<E> findAll() throws Exception;
+    List<E> findAll();
 
-    public Page<E> findAll(Pageable pageable) throws Exception;
+    Page<E> findAll(Pageable pageable);
 
-    public E findById(ID id) throws Exception;
+    E findById(ID id);
 
-    public E save(E entity) throws Exception;
+    E save(E entity);
 
-    public E update(ID id, E entity) throws Exception;
+    E update(ID id, E entity);
 
-    public boolean delete(ID id) throws Exception;
-    
+    boolean delete(ID id);
 
 }

@@ -6,6 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface HealthPlanService extends BaseService<HealthPlan, Long> {
 
-    Page<HealthPlan> search(String filter, Pageable pageable) throws Exception;
+    Page<HealthPlan> search(String filter, Pageable pageable);
 
 }

@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,13 +29,7 @@ public class HealthPlanController extends BaseControllerImpl<HealthPlan, HealthP
     @Operation(summary = "Devuelve las entidades paginadas y filtradas")
     @GetMapping("/searchPaged")
     public ResponseEntity<?> search(@RequestParam String filter, Pageable pageable) {
-
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(healthPlanServiceImpl.search(filter, pageable));
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body((ERROR_404));
-        }
+        return ResponseEntity.ok(healthPlanServiceImpl.search(filter, pageable));
     }
 
 }

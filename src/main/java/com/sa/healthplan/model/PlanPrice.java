@@ -17,15 +17,15 @@ import lombok.Setter;
 
 /**
  * Precio de un plan para una franja etaria, con vigencia. Permite historial de
- * listas: al subir precios nuevos se cierra el período anterior (vigenciaHasta)
- * en vez de borrarlo. El motor de tasación busca el precio vigente a una fecha.
+ * listas: al subir precios nuevos se cierra el período anterior (validTo) en vez
+ * de borrarlo. El motor de tasación busca el precio vigente a una fecha.
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "precio_plan")
-public class PrecioPlan {
+@Table(name = "plan_price")
+public class PlanPrice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,23 +36,23 @@ public class PrecioPlan {
     private HealthPlan plan;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "franja_id", nullable = false)
-    private FranjaEtaria franja;
+    @JoinColumn(name = "age_band_id", nullable = false)
+    private AgeBand ageBand;
 
     @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal monto;
+    private BigDecimal amount;
 
-    @Column(name = "vigencia_desde", nullable = false)
-    private LocalDate vigenciaDesde;
+    @Column(name = "valid_from", nullable = false)
+    private LocalDate validFrom;
 
     /** Null = vigente sin fecha de fin (lista actual). */
-    @Column(name = "vigencia_hasta")
-    private LocalDate vigenciaHasta;
+    @Column(name = "valid_to")
+    private LocalDate validTo;
 
     /** True si el precio está vigente en la fecha dada. */
-    public boolean vigenteEn(LocalDate fecha) {
-        boolean empezo = !fecha.isBefore(vigenciaDesde);
-        boolean noTermino = vigenciaHasta == null || !fecha.isAfter(vigenciaHasta);
-        return empezo && noTermino;
+    public boolean isValidOn(LocalDate date) {
+        boolean started = !date.isBefore(validFrom);
+        boolean notEnded = validTo == null || !date.isAfter(validTo);
+        return started && notEnded;
     }
 }

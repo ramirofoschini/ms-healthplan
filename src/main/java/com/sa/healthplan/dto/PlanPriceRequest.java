@@ -10,18 +10,18 @@ import java.time.LocalDate;
  * validación las verifica Spring con @Valid; si fallan, el GlobalExceptionHandler
  * responde 400 con el detalle por campo. No incluye planId: viene en la URL.
  */
-public record PrecioPlanRequest(
+public record PlanPriceRequest(
 
         @NotNull(message = "La franja etaria es obligatoria")
-        Long franjaId,
+        Long ageBandId,
 
         @NotNull(message = "El monto es obligatorio")
         @Positive(message = "El monto debe ser mayor a cero")
-        BigDecimal monto,
+        BigDecimal amount,
 
         @NotNull(message = "La vigencia desde es obligatoria")
-        LocalDate vigenciaDesde,
+        LocalDate validFrom,
 
-        LocalDate vigenciaHasta
+        LocalDate validTo
 ) {
 }

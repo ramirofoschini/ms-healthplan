@@ -1,12 +1,12 @@
 package com.sa.healthplan.repository;
 
-import com.sa.healthplan.model.PrecioPlan;
+import com.sa.healthplan.model.PlanPrice;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PrecioPlanRepository extends JpaRepository<PrecioPlan, Long> {
+public interface PlanPriceRepository extends JpaRepository<PlanPrice, Long> {
 
-    List<PrecioPlan> findByPlanId(Long planId);
+    List<PlanPrice> findByPlanId(Long planId);
 }

@@ -19,15 +19,15 @@ import lombok.Setter;
 public class HealthPlan extends Base {
 
     /** Nombre comercial del plan (ej. "Plan 210"). */
-    private String nombre;
+    private String name;
 
     /** Nivel de cobertura, usado para diferenciar productos. */
     @Enumerated(EnumType.STRING)
-    @Column(name = "nivel_cobertura", length = 50)
-    private NivelCobertura nivelCobertura;
+    @Column(name = "coverage_level", length = 50)
+    private CoverageLevel coverageLevel;
 
     /** Si está activo se puede tasar/ofrecer; si no, queda fuera de venta. */
-    private boolean activo;
+    private boolean active;
 
     // Campos heredados del modelo original
     private String documentPath;

@@ -1,0 +1,28 @@
+name: PR + auto-merge feat a develop
+
+on:
+  push:
+    branches:
+      - 'feat-*'   # cualquier rama feat/... ; cambiar a 'feat-*' si usás guion
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  pr-auto-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Crear PR hacia develop (si no existe)
+        run: |
+          gh pr create --base develop --head "$GITHUB_REF_NAME" --fill \
+            || echo "El PR ya existe, se continúa."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Habilitar auto-merge
+        run: gh pr merge "$GITHUB_REF_NAME" --auto --merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

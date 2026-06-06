@@ -3,8 +3,8 @@ package com.sa.healthplan.model;
 /**
  * Tipo de documento de identidad del cliente.
  */
-public enum TipoDocumento {
+public enum DocumentType {
     DNI,
-    PASAPORTE,
-    OTRO
+    PASSPORT,
+    OTHER
 }

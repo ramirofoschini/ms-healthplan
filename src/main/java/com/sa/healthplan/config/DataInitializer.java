@@ -1,8 +1,8 @@
 package com.sa.healthplan.config;
 
-import com.sa.healthplan.model.Rol;
-import com.sa.healthplan.model.Usuario;
-import com.sa.healthplan.repository.UsuarioRepository;
+import com.sa.healthplan.model.Role;
+import com.sa.healthplan.model.UserAccount;
+import com.sa.healthplan.repository.UserAccountRepository;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
 
-    private final UsuarioRepository usuarioRepository;
+    private final UserAccountRepository userAccountRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Value("${ADMIN_USER:admin}")
@@ -30,22 +30,22 @@ public class DataInitializer implements CommandLineRunner {
     @Value("${ADMIN_PASSWORD:1234}")
     private String adminPassword;
 
-    public DataInitializer(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
-        this.usuarioRepository = usuarioRepository;
+    public DataInitializer(UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder) {
+        this.userAccountRepository = userAccountRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void run(String... args) {
-        if (usuarioRepository.count() > 0) {
+        if (userAccountRepository.count() > 0) {
             return;
         }
-        Usuario admin = new Usuario();
+        UserAccount admin = new UserAccount();
         admin.setUsername(adminUser);
         admin.setPassword(passwordEncoder.encode(adminPassword));
         admin.setEnabled(true);
-        admin.setRoles(Set.of(Rol.ADMIN));
-        usuarioRepository.save(admin);
+        admin.setRoles(Set.of(Role.ADMIN));
+        userAccountRepository.save(admin);
         log.info("Usuario admin inicial creado: {}", adminUser);
     }
 }

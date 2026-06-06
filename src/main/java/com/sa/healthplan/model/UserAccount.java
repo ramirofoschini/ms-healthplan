@@ -21,13 +21,14 @@ import lombok.Setter;
 /**
  * Usuario interno (agente, supervisor o admin). No se expone vía el
  * BaseController; lo consume Spring Security a través de CustomUserDetailsService.
+ * Se llama UserAccount para no chocar con org.springframework...userdetails.User.
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "usuario")
-public class Usuario {
+@Table(name = "user_account")
+public class UserAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,8 +44,8 @@ public class Usuario {
     private boolean enabled = true;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "usuario_id"))
+    @CollectionTable(name = "user_account_role", joinColumns = @JoinColumn(name = "user_account_id"))
     @Enumerated(EnumType.STRING)
-    @Column(name = "rol", nullable = false, length = 50)
-    private Set<Rol> roles = new HashSet<>();
+    @Column(name = "role", nullable = false, length = 50)
+    private Set<Role> roles = new HashSet<>();
 }

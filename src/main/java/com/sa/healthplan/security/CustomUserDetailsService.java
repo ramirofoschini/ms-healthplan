@@ -1,6 +1,6 @@
 package com.sa.healthplan.security;
 
-import com.sa.healthplan.repository.UsuarioRepository;
+import com.sa.healthplan.repository.UserAccountRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,25 +15,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UserAccountRepository userAccountRepository;
 
-    public CustomUserDetailsService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+    public CustomUserDetailsService(UserAccountRepository userAccountRepository) {
+        this.userAccountRepository = userAccountRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        var usuario = usuarioRepository.findByUsername(username)
+        var user = userAccountRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
 
-        var authorities = usuario.getRoles().stream()
-                .map(rol -> new SimpleGrantedAuthority("ROLE_" + rol.name()))
+        var authorities = user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
                 .toList();
 
         return User.builder()
-                .username(usuario.getUsername())
-                .password(usuario.getPassword())
-                .disabled(!usuario.isEnabled())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .disabled(!user.isEnabled())
                 .authorities(authorities)
                 .build();
     }

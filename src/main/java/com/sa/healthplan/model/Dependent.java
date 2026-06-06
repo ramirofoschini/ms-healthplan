@@ -18,39 +18,39 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Integrante del grupo familiar de un Cliente. Cada uno suma su precio (según
+ * Integrante del grupo familiar de un Customer. Cada uno suma su precio (según
  * su edad) al tasar el plan del titular.
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "integrante")
-public class Integrante {
+@Table(name = "dependent")
+public class Dependent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cliente_id", nullable = false)
-    private Cliente cliente;
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
-    private Parentesco parentesco;
+    private Relationship relationship;
 
-    @Column(nullable = false)
-    private String nombre;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
 
-    @Column(nullable = false)
-    private String apellido;
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
 
-    @Column(name = "fecha_nacimiento", nullable = false)
-    private LocalDate fechaNacimiento;
+    @Column(name = "birth_date", nullable = false)
+    private LocalDate birthDate;
 
     /** Edad del integrante en la fecha dada (años cumplidos). */
-    public int edadEn(LocalDate fecha) {
-        return Period.between(fechaNacimiento, fecha).getYears();
+    public int ageOn(LocalDate date) {
+        return Period.between(birthDate, date).getYears();
     }
 }

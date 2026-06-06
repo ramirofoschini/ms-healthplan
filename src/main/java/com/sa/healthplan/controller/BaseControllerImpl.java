@@ -1,11 +1,11 @@
 package com.sa.healthplan.controller;
 
 import com.sa.healthplan.model.Base;
-
 import com.sa.healthplan.service.BaseServiceImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -25,13 +25,24 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
 
     @Autowired
     protected S service;
-
+    private static final Logger logg = Logger.getLogger(BaseControllerImpl.class);
+    
+    
+    
+    @GetMapping("/prueba")
+    public List<E>getPrueba () throws Exception{
+    logg.info("Metodo GetAll");
+    return service.findAll();
+    
+    }
+    
+    
     @Operation(summary = "Devuelve todas las entidades")
-    @GetMapping("")
+    @GetMapping("/healthPlans")
     @Override
     public ResponseEntity<?> getAll() {
         try {
-
+            logg.info("Metodo GetAll");
             List<E> listHp = service.findAll();
 
             if (listHp.isEmpty()) {
@@ -48,6 +59,7 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
             model.add(linkTo(methodOn(HealthPlanController.class).getAll()).withSelfRel());
 
             return new ResponseEntity<>(model, HttpStatus.OK);
+            
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ERROR_404);
@@ -56,7 +68,7 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
     }
 
     @Operation(summary = "Devuelve entidades por ID")
-    @GetMapping("{id}")
+    @GetMapping("/healthPlan/{id}")
     @Override
     public ResponseEntity<?> getOne(@PathVariable Long id) {
         try {
@@ -75,7 +87,7 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
     }
 
     @Operation(summary = "Crea nuevas entidades")
-    @PostMapping("")
+    @PostMapping("/healthPlan")
     @Override
     public ResponseEntity<?> save(@RequestBody E entity) {
         try {
@@ -97,7 +109,7 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
     }
 
     @Operation(summary = "Modifica una entidad por ID")
-    @PutMapping("{id}")
+    @PutMapping("/healthPlan/{id}")
 
     @Override
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody E entity) {
@@ -121,7 +133,7 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
     }
 
     @Operation(summary = "Elimina una entidad por ID")
-    @DeleteMapping("{id}")
+    @DeleteMapping("/healthPlan/{id}")
 
     @Override
     public ResponseEntity<?> delete(@PathVariable Long id) {

@@ -19,6 +19,5 @@ public class Base extends RepresentationModel<HealthPlan> implements Serializabl
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nameplan;
-
+   
 }

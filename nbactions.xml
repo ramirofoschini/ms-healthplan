@@ -25,7 +25,7 @@
         </goals>
         <properties>
             <run.jvmArguments>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -noverify -XX:TieredStopAtLevel=1 </run.jvmArguments>
-            <run.mainClass>com.softwel.account.AccountApplication</run.mainClass>
+            <run.mainClass>com.sa.healthplan.HealthPlanApplication</run.mainClass>
             <Env.SPRING_OUTPUT_ANSI_ENABLED>always</Env.SPRING_OUTPUT_ANSI_ENABLED>
             <jpda.listen>true</jpda.listen>
         </properties>

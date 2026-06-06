@@ -1,4 +1,4 @@
-package com.sa.healthplan;
+package com.sa.healthplan.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;

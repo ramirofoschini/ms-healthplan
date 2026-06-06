@@ -3,7 +3,7 @@ name: PR + auto-merge feat a develop
 on:
   push:
     branches:
-      - 'feat-*'   # cualquier rama feat/... ; cambiar a 'feat-*' si usás guion
+      - 'feat-*'   # cualquier rama feat-... ; cambiar a 'feat/**' si usás barra
 
 permissions:
   contents: write
@@ -14,15 +14,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # historial completo: necesario para que gh pr create resuelva 'develop'
 
-      - name: Crear PR hacia develop (si no existe)
+      - name: Crear o reutilizar PR y habilitar auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create --base develop --head "$GITHUB_REF_NAME" --fill \
-            || echo "El PR ya existe, se continúa."
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Habilitar auto-merge
-        run: gh pr merge "$GITHUB_REF_NAME" --auto --merge
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          set -e
+          # ¿Ya hay un PR abierto de esta rama hacia develop?
+          PR=$(gh pr list --head "$GITHUB_REF_NAME" --base develop --state open --json number --jq '.[0].number')
+          if [ -z "$PR" ]; then
+            echo "No existe PR abierto, creando uno nuevo..."
+            gh pr create --base develop --head "$GITHUB_REF_NAME" --fill
+          else
+            echo "Reutilizando PR #$PR ya existente."
+          fi
+          gh pr merge "$GITHUB_REF_NAME" --auto --merge

@@ -7,8 +7,8 @@ Herramienta interna para **tasar y vender planes de obra social**. Permite a los
 ## Stack
 
 - **Java 17** · **Spring Boot 3.0.2**
-- Spring Web (REST) + Spring HATEOAS
-- Spring Data JPA + **MySQL 8**
+- Spring Web (REST)
+- Spring Data JPA + **PostgreSQL**
 - **Flyway** (versionado del esquema)
 - Spring Security (HTTP Basic, usuarios en BD con roles, BCrypt)
 - springdoc-openapi (Swagger UI)
@@ -17,7 +17,7 @@ Herramienta interna para **tasar y vender planes de obra social**. Permite a los
 ## Requisitos
 
 - JDK 17 o superior
-- MySQL 8 corriendo en `localhost:3306`
+- PostgreSQL corriendo en `localhost:5432` (o usá el `docker-compose.yml` incluido: `docker compose up -d`)
 - Maven (o el wrapper del IDE)
 
 ## Configuración
@@ -26,8 +26,8 @@ La aplicación lee la configuración de variables de entorno, con *defaults* pen
 
 | Variable        | Default                                    | Descripción                       |
 |-----------------|--------------------------------------------|-----------------------------------|
-| `DB_URL`        | `jdbc:mysql://localhost:3306/health_plan`  | URL de la base de datos           |
-| `DB_USERNAME`   | `root`                                     | Usuario de la base                |
+| `DB_URL`        | `jdbc:postgresql://localhost:5432/health_plan` | URL de la base de datos       |
+| `DB_USERNAME`   | `postgres`                                 | Usuario de la base                |
 | `DB_PASSWORD`   | `1234`                                     | Contraseña de la base             |
 | `ADMIN_USER`    | `admin`                                    | Usuario admin inicial             |
 | `ADMIN_PASSWORD`| `1234`                                     | Contraseña del admin inicial      |
@@ -36,9 +36,13 @@ La aplicación lee la configuración de variables de entorno, con *defaults* pen
 
 ## Base de datos
 
-1. Crear la base vacía (las tablas las gestiona Flyway):
+1. Levantar PostgreSQL. La forma más rápida es el compose incluido (crea la base `health_plan` con usuario `postgres`/`1234`):
+   ```bash
+   docker compose up -d
+   ```
+   O, si tenés PostgreSQL instalado, crear la base vacía:
    ```sql
-   CREATE DATABASE health_plan CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   CREATE DATABASE health_plan;
    ```
 2. Al arrancar, **Flyway** aplica las migraciones de `src/main/resources/db/migration` (`V1`, `V2`, …) y `DataInitializer` siembra el usuario admin si la tabla está vacía. Hibernate corre en modo `validate` (no modifica el esquema).
 
@@ -101,7 +105,7 @@ El esquema se versiona con Flyway. Los errores se traducen a códigos HTTP corre
 
 ## CI/CD
 
-GitHub Actions (`.github/workflows/auto-merge-feat.yml`): cada push a una rama `feat-*` compila con Maven contra un MySQL de servicio y, si el build pasa, abre/mergea un Pull Request a `develop`.
+GitHub Actions (`.github/workflows/auto-merge-feat.yml`): cada push a una rama `feat-*` compila con Maven contra un PostgreSQL de servicio y, si el build pasa, abre/mergea un Pull Request a `develop`.
 
 ## Roadmap
 

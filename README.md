@@ -1,3 +1,111 @@
-<H1> Proyecto de microservicios desarrollado con Springboot y base de datos MySql </H1>
+# ms-healthplan
 
-<h3>Documentacion Swagger: <a href:"http://localhost:8081/swagger-ui/index.htm"/>"http://localhost:8081/swagger-ui/index.html"</h3>
+Herramienta interna para **tasar y vender planes de obra social**. Permite a los agentes/vendedores gestionar planes y sus precios, cargar clientes con su grupo familiar y **simular cotizaciones** según la edad de cada integrante.
+
+> Proyecto en evolución: nació como un CRUD de ejemplo y se está refactorizando, de a poco, hacia una arquitectura escalable con buenas prácticas.
+
+## Stack
+
+- **Java 17** · **Spring Boot 3.0.2**
+- Spring Web (REST) + Spring HATEOAS
+- Spring Data JPA + **MySQL 8**
+- **Flyway** (versionado del esquema)
+- Spring Security (HTTP Basic, usuarios en BD con roles, BCrypt)
+- springdoc-openapi (Swagger UI)
+- Lombok · Maven
+
+## Requisitos
+
+- JDK 17 o superior
+- MySQL 8 corriendo en `localhost:3306`
+- Maven (o el wrapper del IDE)
+
+## Configuración
+
+La aplicación lee la configuración de variables de entorno, con *defaults* pensados solo para desarrollo local:
+
+| Variable        | Default                                    | Descripción                       |
+|-----------------|--------------------------------------------|-----------------------------------|
+| `DB_URL`        | `jdbc:mysql://localhost:3306/health_plan`  | URL de la base de datos           |
+| `DB_USERNAME`   | `root`                                     | Usuario de la base                |
+| `DB_PASSWORD`   | `1234`                                     | Contraseña de la base             |
+| `ADMIN_USER`    | `admin`                                    | Usuario admin inicial             |
+| `ADMIN_PASSWORD`| `1234`                                     | Contraseña del admin inicial      |
+
+> En producción definí estas variables por entorno. **No se versionan credenciales.**
+
+## Base de datos
+
+1. Crear la base vacía (las tablas las gestiona Flyway):
+   ```sql
+   CREATE DATABASE health_plan CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   ```
+2. Al arrancar, **Flyway** aplica las migraciones de `src/main/resources/db/migration` (`V1`, `V2`, …) y `DataInitializer` siembra el usuario admin si la tabla está vacía. Hibernate corre en modo `validate` (no modifica el esquema).
+
+## Cómo correr
+
+```bash
+mvn spring-boot:run
+```
+
+La app levanta en **`http://localhost:8081`**.
+
+## Autenticación
+
+Autenticación **HTTP Basic**. Usuario inicial: `admin` / `1234` (configurable por entorno).
+Roles disponibles: `AGENT`, `SUPERVISOR`, `ADMIN`.
+
+## Documentación de la API
+
+- **Swagger UI:** http://localhost:8081/swagger-ui/index.html
+- **OpenAPI JSON:** http://localhost:8081/v3/api-docs
+
+Swagger documenta únicamente los endpoints bajo `/api/**` y expone un botón *Authorize* para probar con HTTP Basic.
+
+## Endpoints principales
+
+| Método      | Ruta                                   | Descripción                          | Acceso              |
+|-------------|----------------------------------------|--------------------------------------|---------------------|
+| `GET`       | `/api/v1/age-bands`                    | Lista las franjas etarias            | autenticado         |
+| `GET`       | `/api/v1/plans/{planId}/prices`        | Precios de un plan                   | autenticado         |
+| `POST`      | `/api/v1/plans/{planId}/prices`        | Carga un precio                      | `ADMIN`/`SUPERVISOR`|
+| `POST`/`GET`| `/api/v1/customers`                    | Alta y listado de clientes           | autenticado         |
+| `GET`       | `/api/v1/customers/{id}`               | Cliente con su grupo familiar        | autenticado         |
+| `POST`      | `/api/v1/customers/{id}/dependents`    | Suma un integrante                   | autenticado         |
+| `POST`      | `/api/v1/quotes/simulate`              | Simula una cotización                | autenticado         |
+
+(El CRUD de planes vive bajo `/api/v1/healthPlans`, `/api/v1/healthPlan/{id}`, etc. Ver Swagger para el detalle completo.)
+
+### Ejemplo: simular una cotización
+
+```http
+POST /api/v1/quotes/simulate
+Content-Type: application/json
+
+{ "planId": 1, "customerId": 1 }
+```
+
+Devuelve el desglose por integrante (titular + grupo familiar) y el total.
+
+## Arquitectura
+
+```
+controller -> service -> repository -> model
+  + dto        (contrato de la API, separado de las entidades)
+  + exception  (manejo centralizado de errores con @RestControllerAdvice)
+```
+
+El esquema se versiona con Flyway. Los errores se traducen a códigos HTTP correctos (404, 400, 409, 422) con un cuerpo `ErrorResponse` uniforme.
+
+## CI/CD
+
+GitHub Actions (`.github/workflows/auto-merge-feat.yml`): cada push a una rama `feat-*` compila con Maven contra un MySQL de servicio y, si el build pasa, abre/mergea un Pull Request a `develop`.
+
+## Roadmap
+
+- [x] **Etapa 0 — Cimientos**: logging, manejo de errores, Flyway, seguridad con roles
+- [x] **Etapa 1 — Producto**: planes + precios por franja etaria
+- [x] **Etapa 2 — Clientes** y grupo familiar
+- [x] **Etapa 3 — Motor de tasación** (simulación de cotización)
+- [ ] **Etapa 4 — Cotización persistida** (estados, vigencia, cartera del agente)
+- [ ] **Etapa 5 — Solicitud de contratación**

@@ -1,0 +1,22 @@
+# Blueprint de Render: despliega la app como web service Docker (plan free),
+# desde la rama develop. La base es externa (PostgreSQL gestionado, ej. Neon).
+# Las variables con sync:false las pide Render al crear el servicio (no se versionan).
+services:
+  - type: web
+    name: ms-healthplan
+    runtime: docker
+    plan: free
+    region: oregon
+    branch: develop
+    healthCheckPath: /v3/api-docs
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false

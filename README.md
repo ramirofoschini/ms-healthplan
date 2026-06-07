@@ -107,6 +107,10 @@ El esquema se versiona con Flyway. Los errores se traducen a códigos HTTP corre
 
 GitHub Actions (`.github/workflows/auto-merge-feat.yml`): cada push a una rama `feat-*` compila con Maven contra un PostgreSQL de servicio y, si el build pasa, abre/mergea un Pull Request a `develop`.
 
+## Deploy
+
+La app se containeriza con el `Dockerfile` (multi-etapa) y se despliega con el perfil `prod`. Ver **[DEPLOY.md](DEPLOY.md)** para la guía completa (Neon + Render, gratis).
+
 ## Roadmap
 
 - [x] **Etapa 0 — Cimientos**: logging, manejo de errores, Flyway, seguridad con roles

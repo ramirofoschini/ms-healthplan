@@ -1,0 +1,21 @@
+name: Keep-alive (evita que Render duerma la app)
+
+# Render free duerme la app tras ~15 min sin tráfico. Este cron la pingea cada
+# 10 min para mantenerla despierta. Los workflows programados corren desde la
+# rama default del repo. Para repos públicos, los minutos de Actions son gratis.
+on:
+  schedule:
+    - cron: '*/10 * * * *'   # cada 10 minutos (UTC)
+  workflow_dispatch: {}       # permite dispararlo a mano desde la pestaña Actions
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping a producción
+        run: |
+          URL="https://ms-healthplan.onrender.com/v3/api-docs"
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 90 "$URL")
+          echo "Ping a $URL -> HTTP $code"
+          # No fallamos el job por un código != 200 (puede estar despertando);
+          # el objetivo es solo generar tráfico para que no se duerma.

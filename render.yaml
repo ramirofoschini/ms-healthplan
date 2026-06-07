@@ -1,5 +1,7 @@
 # Blueprint de Render: despliega la app como web service Docker (plan free),
-# desde la rama develop. La base es externa (PostgreSQL gestionado, ej. Neon).
+# desde la rama main (producción). El deploy es MANUAL (autoDeploy: false):
+# se promueve develop -> main y se dispara el deploy desde el panel de Render.
+# La base es externa (PostgreSQL gestionado, ej. Neon).
 # Las variables con sync:false las pide Render al crear el servicio (no se versionan).
 services:
   - type: web
@@ -7,7 +9,8 @@ services:
     runtime: docker
     plan: free
     region: oregon
-    branch: develop
+    branch: main
+    autoDeploy: false
     healthCheckPath: /v3/api-docs
     envVars:
       - key: SPRING_PROFILES_ACTIVE

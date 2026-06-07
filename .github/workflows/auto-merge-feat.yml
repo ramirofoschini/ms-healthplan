@@ -13,17 +13,17 @@ jobs:
   build-and-merge:
     runs-on: ubuntu-latest
 
-    # MySQL de servicio: mismas credenciales/base que application.properties
+    # PostgreSQL de servicio: mismas credenciales/base que application.properties
     services:
-      mysql:
-        image: mysql:8.0
+      postgres:
+        image: postgres:16
         env:
-          MYSQL_ROOT_PASSWORD: "1234"
-          MYSQL_DATABASE: health_plan
+          POSTGRES_DB: health_plan
+          POSTGRES_PASSWORD: "1234"
         ports:
-          - 3306:3306
+          - 5432:5432
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -p1234"
+          --health-cmd="pg_isready -U postgres"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
@@ -41,7 +41,7 @@ jobs:
           cache: maven
 
       # Si este paso falla, el job se corta y NO se mergea nada
-      - name: Build con Maven (compila + tests contra MySQL)
+      - name: Build con Maven (compila + tests contra PostgreSQL)
         run: mvn -B -ntp clean package
 
       - name: Crear/reutilizar PR y mergear a develop

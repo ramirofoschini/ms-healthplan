@@ -12,8 +12,10 @@ import org.springframework.stereotype.Repository;
 public interface HealthPlanRepository extends JpaRepository<HealthPlan, Long> {
 
     @Query(
-            value = "SELECT * FROM health_plan WHERE clinics LIKE %:filter% OR comments LIKE %:filter%",
-            countQuery = "SELECT count(*) FROM health_plan WHERE clinics LIKE %:filter% OR comments LIKE %:filter%",
+            value = "SELECT * FROM health_plan WHERE clinics ILIKE CONCAT('%', :filter, '%') "
+                    + "OR comments ILIKE CONCAT('%', :filter, '%')",
+            countQuery = "SELECT count(*) FROM health_plan WHERE clinics ILIKE CONCAT('%', :filter, '%') "
+                    + "OR comments ILIKE CONCAT('%', :filter, '%')",
             nativeQuery = true
     )
     Page<HealthPlan> search(@Param("filter") String filter, Pageable pageable);

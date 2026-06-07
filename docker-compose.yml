@@ -1,0 +1,18 @@
+# PostgreSQL para desarrollo local. Coincide con los defaults de application.properties
+# (jdbc:postgresql://localhost:5432/health_plan, usuario postgres / 1234).
+#   docker compose up -d   -> levanta la base
+#   docker compose down     -> la apaga (los datos persisten en el volumen)
+services:
+  postgres:
+    image: postgres:16
+    container_name: healthplan-postgres
+    environment:
+      POSTGRES_DB: health_plan
+      POSTGRES_PASSWORD: "1234"
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

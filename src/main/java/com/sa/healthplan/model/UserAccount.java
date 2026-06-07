@@ -19,8 +19,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Usuario interno (agente, supervisor o admin). No se expone vía el
- * BaseController; lo consume Spring Security a través de CustomUserDetailsService.
+ * Usuario interno (agente, supervisor o admin). No se expone por la API;
+ * lo consume Spring Security a través de CustomUserDetailsService.
  * Se llama UserAccount para no chocar con org.springframework...userdetails.User.
  */
 @Getter

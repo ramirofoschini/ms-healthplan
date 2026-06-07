@@ -73,8 +73,10 @@ Swagger documenta únicamente los endpoints bajo `/api/**` y expone un botón *A
 | `GET`       | `/api/v1/customers/{id}`               | Cliente con su grupo familiar        | autenticado         |
 | `POST`      | `/api/v1/customers/{id}/dependents`    | Suma un integrante                   | autenticado         |
 | `POST`      | `/api/v1/quotes/simulate`              | Simula una cotización                | autenticado         |
+| `GET`       | `/api/v1/health-plans`                 | Lista / busca planes                 | autenticado         |
+| `POST`/`PUT`/`DELETE` | `/api/v1/health-plans[/{id}]`| ABM de planes                        | `ADMIN`/`SUPERVISOR`|
 
-(El CRUD de planes vive bajo `/api/v1/healthPlans`, `/api/v1/healthPlan/{id}`, etc. Ver Swagger para el detalle completo.)
+(Ver Swagger para el detalle completo de parámetros y schemas.)
 
 ### Ejemplo: simular una cotización
 

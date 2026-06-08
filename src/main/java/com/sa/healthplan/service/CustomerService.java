@@ -63,6 +63,37 @@ public class CustomerService {
     }
 
     @Transactional
+    public CustomerDTO updateCustomer(Long id, CustomerRequest request) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("el cliente", id));
+
+        // Si cambió el documento, validar que no choque con el de otro cliente.
+        boolean documentChanged = customer.getDocumentType() != request.documentType()
+                || !customer.getDocumentNumber().equals(request.documentNumber());
+        if (documentChanged
+                && customerRepository.existsByDocumentTypeAndDocumentNumber(request.documentType(), request.documentNumber())) {
+            throw new DuplicateResourceException(
+                    "Ya existe un cliente con documento " + request.documentType() + " " + request.documentNumber());
+        }
+
+        customer.setFirstName(request.firstName());
+        customer.setLastName(request.lastName());
+        customer.setDocumentType(request.documentType());
+        customer.setDocumentNumber(request.documentNumber());
+        customer.setBirthDate(request.birthDate());
+        customer.setEmail(request.email());
+        customer.setPhone(request.phone());
+
+        // Reemplaza el grupo familiar por el enviado; orphanRemoval borra los quitados.
+        customer.getDependents().clear();
+        if (request.dependents() != null) {
+            request.dependents().forEach(d -> customer.addDependent(toDependent(d)));
+        }
+
+        return CustomerDTO.from(customerRepository.save(customer));
+    }
+
+    @Transactional
     public CustomerDTO addDependent(Long customerId, DependentRequest request) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException("el cliente", customerId));

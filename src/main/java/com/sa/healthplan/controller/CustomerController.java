@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +43,12 @@ public class CustomerController {
     @GetMapping
     public List<CustomerDTO> list() {
         return customerService.listCustomers();
+    }
+
+    @Operation(summary = "Actualiza un cliente y reemplaza su grupo familiar")
+    @PutMapping("/{id}")
+    public CustomerDTO update(@PathVariable Long id, @Valid @RequestBody CustomerRequest request) {
+        return customerService.updateCustomer(id, request);
     }
 
     @Operation(summary = "Agrega un integrante al grupo familiar de un cliente")
